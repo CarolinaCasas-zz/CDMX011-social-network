@@ -29,8 +29,9 @@ const component = routes[window.location.pathname];
 stateCheck().onAuthStateChanged((user) => {
   if (user) {
     onNavigate('/home');
+  } else {
+    onNavigate('/');
   }
-  onNavigate('/');
 });
 
 window.onpopstate = () => {
