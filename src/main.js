@@ -1,7 +1,9 @@
 // Este es el punto de entrada de tu aplicacion
 import { login } from './components/login.js';
 import { register } from './components/register.js';
+// eslint-disable-next-line import/named
 import { home } from './components/home.js';
+import { stateCheck } from './firebaseAuth.js';
 
 const routesDiv = document.getElementById('root');
 
@@ -25,6 +27,19 @@ export const onNavigate = (pathname) => {
 };
 const component = routes[window.location.pathname];
 
-routesDiv.appendChild(component());
+stateCheck().onAuthStateChanged((user) => {
+  if (user) {
+    onNavigate('/home');
+  } else {
+    onNavigate('/');
+  }
+});
 
-// este export es para ir de Registro a Home
+window.onpopstate = () => {
+  while (routesDiv.firstChild) {
+    routesDiv.removeChild(routesDiv);
+  }
+  routesDiv.appendChild(routes[window.location.pathname]());
+};
+
+routesDiv.appendChild(component());

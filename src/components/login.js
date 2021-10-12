@@ -1,18 +1,26 @@
 import { onNavigate } from '../main.js';
 import { allFunctions } from '../lib/validFunc.js';
-import { signIn, gmailAuth, persistence } from '../firebaseAuth.js';
+import {
+  signIn, gmailAuth,
+} from '../firebaseAuth.js';
 
 export const login = () => {
   const loginPage = document.createElement('div');
-  const htmlLogin = `<div class="loginPage">
+  loginPage.setAttribute('id', 'loginContainer');
+  const htmlLogin = `<div id="wallPaw">
+  <img class="pawTop" src="./imagenes/pawsTop.png">
+  <p id="spam">El mejor sitio para <br> presumir a <br>tus mascotas</p>
+  <img class="pawButton" src="./imagenes/pawsButton.png"></div>
+  <div class="loginPage">
   <header id="banner"><img id="logo" src="./imagenes/Imagen1.png">
   <h1 id="petFriends">Pet Friends</h1></header>
   <form id="formContainer">
-  <input id="email" placeholder="Correo electrónico">
+  <input id="email" placeholder="Correo electrónico" autofocus>
   <h5 id="invalidEmail"></h5>
   <div class="eyeContainer">
-  <input id="password" type="password" placeholder="Contraseña" required="required">
+  <input id="password" type="password" placeholder="Contraseña"  required="required">
   <img class="openEye" src="./imagenes/openEye 1.png">
+  <img class="closeEye" src="./imagenes/closeEye 1.png">
   </div>
   <h5 id="entryError"></h5>
   <button id="signIn">Iniciar sesión</button>
@@ -26,6 +34,7 @@ export const login = () => {
   loginPage.innerHTML = htmlLogin;
   let savedPassword = '';
   let printEmail = '';
+
   loginPage.querySelector('#signIn').addEventListener('click', (e) => {
     e.preventDefault();
     const saveEmail = loginPage.querySelector('#email').value;
@@ -42,27 +51,31 @@ export const login = () => {
         console.log('Estas logueada');
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        loginPage.querySelector('#entryError').innerHTML = 'Verifica los datos ingresados';
+        loginPage.querySelector('#entryError').innerHTML = errorMessage;
       });
-    /* console.log(persistance(printEmail, savedPassword)); */// console.log(printEmail);
   });
-  /* loginPage.querySelector('#email').addEventListener('click', (e) => {
-    e.preventDefault();
-    onNavigate('/home');
-  }); */
-  persistence(signIn);
-
   loginPage.querySelector('.openEye').addEventListener('click', () => {
+    loginPage.querySelector('.closeEye').style.visibility = 'visible';
+    loginPage.querySelector('.openEye').style.visibility = 'hidden';
     const returnPassword = loginPage.querySelector('#password');
-    if (returnPassword.type === 'text') {
-      returnPassword.type = 'password';
-    } else {
+    if (returnPassword.type === 'password') {
       returnPassword.type = 'text';
+    } else {
+      returnPassword.type = 'password';
     }
   });
+  loginPage.querySelector('.closeEye').addEventListener('click', () => {
+    loginPage.querySelector('.closeEye').style.visibility = 'hidden';
+    loginPage.querySelector('.openEye').style.visibility = 'visible';
+    const returnPassword = loginPage.querySelector('#password');
+    if (returnPassword.type === 'password') {
+      returnPassword.type = 'text';
+    } else {
+      returnPassword.type = 'password';
+    }
+  });
+
   loginPage.querySelector('#routeButton').addEventListener('click', () => onNavigate('/register'));
 
   loginPage.querySelector('#signInGoogle').addEventListener('click', () => {
